@@ -12,6 +12,7 @@ interface FipeContextType {
   selectedModel: string | null
   setSelectedBrand: (brand: string) => void
   setSelectedModel: (model: string) => void
+  isLoadingBrands: boolean
 }
 
 const FipeContext = createContext<FipeContextType | undefined>(undefined)
@@ -20,14 +21,22 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null)
   const [selectedModel, setSelectedModel] = useState<string | null>(null)
 
-  const { data: brands, error: brandsError } = useSWR('/api/brands', fetcher, {
+  const {
+    data: brands,
+    error: brandsError,
+    isLoading: isLoadingBrands,
+  } = useSWR('/api/brands', fetcher, {
     revalidateOnFocus: false,
+    fallbackData: [],
     dedupingInterval: 3600000, // 1h
+    
   })
+
   const { data: models, error: modelsError } = useSWR(
     selectedBrand ? `/api/models?brand=${selectedBrand}` : null,
     fetcher,
   )
+
   const { data: years, error: yearsError } = useSWR(
     selectedModel ? `/api/years?brand=${selectedBrand}&model=${selectedModel}` : null,
     fetcher,
@@ -40,6 +49,7 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
   return (
     <FipeContext.Provider
       value={{
+        isLoadingBrands,
         brands,
         models,
         years,

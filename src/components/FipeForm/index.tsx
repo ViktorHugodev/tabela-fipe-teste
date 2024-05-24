@@ -37,6 +37,7 @@ const FipeForm = () => {
     selectedModel,
     setSelectedBrand,
     setSelectedModel,
+    isLoadingBrands,
   } = useFipe()
 
   const {
@@ -83,7 +84,12 @@ const FipeForm = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl fullWidth margin='normal' error={!!errors.brand}>
           <InputLabel id='brand-label'>Marca</InputLabel>
-          <Select labelId='brand-label' {...register('brand')} defaultValue=''>
+          <Select
+            labelId='brand-label'
+            {...register('brand')}
+            defaultValue=''
+            disabled={isLoadingBrands}
+          >
             <MenuItem value=''>
               <em>Selecione a Marca</em>
             </MenuItem>

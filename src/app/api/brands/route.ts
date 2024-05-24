@@ -8,8 +8,9 @@ export async function GET() {
         revalidate: 3600000, //1h
       },
     })
-    console.log('🚀 ~ GET ~ response:', response)
+
     const data = await response.json()
+    console.log('🚀 ~ GET ~ data:', data)
     return NextResponse.json(data)
   } catch (error) {
     return NextResponse.json({ error: 'Falha na requisição de brands' }, { status: 500 })
