@@ -20,7 +20,10 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null)
   const [selectedModel, setSelectedModel] = useState<string | null>(null)
 
-  const { data: brands, error: brandsError } = useSWR('/api/brands', fetcher)
+  const { data: brands, error: brandsError } = useSWR('/api/brands', fetcher, {
+    revalidateOnFocus: false,
+    dedupingInterval: 3600000, // 1h
+  })
   const { data: models, error: modelsError } = useSWR(
     selectedBrand ? `/api/models?brand=${selectedBrand}` : null,
     fetcher,

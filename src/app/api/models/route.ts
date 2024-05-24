@@ -12,6 +12,11 @@ export async function GET(req: Request) {
   try {
     const response = await fetch(
       `https://parallelum.com.br/fipe/api/v1/carros/marcas/${brand}/modelos`,
+      {
+        next: {
+          revalidate: 3600000, //1h
+        },
+      },
     )
     const data = await response.json()
     return NextResponse.json(data.modelos)

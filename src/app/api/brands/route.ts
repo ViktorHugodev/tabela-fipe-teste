@@ -3,7 +3,11 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   try {
-    const response = await fetch('https://parallelum.com.br/fipe/api/v1/carros/marcas')
+    const response = await fetch('https://parallelum.com.br/fipe/api/v1/carros/marcas', {
+      next: {
+        revalidate: 3600000, //1h
+      },
+    })
     console.log('🚀 ~ GET ~ response:', response)
     const data = await response.json()
     return NextResponse.json(data)
