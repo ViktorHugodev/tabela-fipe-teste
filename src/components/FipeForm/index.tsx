@@ -1,4 +1,3 @@
-// components/FipeForm.tsx
 'use client'
 
 import React, { useEffect } from 'react'
@@ -20,33 +19,54 @@ import { useFipe } from '@/context/FipeContext'
 interface FormData {
   brand: string
   model: string
+  year: string
 }
 
 const schema = yup.object().shape({
   brand: yup.string().required('Marca é obrigatória'),
   model: yup.string().required('Modelo é obrigatório'),
+  year: yup.string().required('Ano é obrigatório'),
 })
 
-export default function FipeForm() {
-  const { brands, models, fetchModels } = useFipe()
+const FipeForm = () => {
+  const {
+    brands,
+    models,
+    years,
+    selectedBrand,
+    selectedModel,
+    setSelectedBrand,
+    setSelectedModel,
+  } = useFipe()
+
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   })
 
-  const selectedBrand = watch('brand')
+  const watchBrand = watch('brand')
+  const watchModel = watch('model')
 
   useEffect(() => {
-    if (selectedBrand) {
+    if (watchBrand !== selectedBrand) {
+      setSelectedBrand(watchBrand)
+      setSelectedModel(null)
       setValue('model', '')
-      fetchModels(selectedBrand)
+      setValue('year', '')
     }
-  }, [selectedBrand, setValue, fetchModels])
+  }, [watchBrand, setSelectedBrand, setSelectedModel, setValue, selectedBrand])
+
+  useEffect(() => {
+    if (watchModel !== selectedModel) {
+      setSelectedModel(watchModel)
+      setValue('year', '')
+    }
+  }, [watchModel, setSelectedModel, setValue, selectedModel])
 
   const onSubmit = (data: FormData) => {
     console.log(data)
@@ -83,7 +103,7 @@ export default function FipeForm() {
             disabled={!selectedBrand}
           >
             <MenuItem value=''>
-              <em>Selecione o Modelo</em>
+              <em>{!selectedBrand ? 'Selecione a Marca primeiro' : 'Selecione o Modelo'}</em>
             </MenuItem>
             {models?.map(model => (
               <MenuItem key={model.codigo} value={model.codigo}>
@@ -92,6 +112,26 @@ export default function FipeForm() {
             ))}
           </Select>
         </FormControl>
+        {selectedBrand && selectedModel && (
+          <FormControl fullWidth margin='normal' error={!!errors.year}>
+            <InputLabel id='year-label'>Ano</InputLabel>
+            <Select
+              labelId='year-label'
+              {...register('year')}
+              defaultValue=''
+              disabled={!selectedModel}
+            >
+              <MenuItem value=''>
+                <em>Selecione o Ano</em>
+              </MenuItem>
+              {years?.map(year => (
+                <MenuItem key={year.codigo} value={year.codigo}>
+                  {year.nome}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
         <Button type='submit' variant='contained' color='primary' fullWidth>
           Consultar preço
         </Button>
@@ -99,3 +139,5 @@ export default function FipeForm() {
     </Container>
   )
 }
+
+export default FipeForm

@@ -2,12 +2,12 @@
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  console.log('GET Brands')
   try {
     const response = await fetch('https://parallelum.com.br/fipe/api/v1/carros/marcas')
+    console.log('🚀 ~ GET ~ response:', response)
     const data = await response.json()
     return NextResponse.json(data)
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch brands' }, { status: 500 })
+    return NextResponse.json({ error: 'Falha na requisição de brands' }, { status: 500 })
   }
 }
