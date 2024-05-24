@@ -1,3 +1,58 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:perfectionist/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "@next/next/recommended"
+  ],
+  "plugins": [
+    "perfectionist",
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "perfectionist/sort-imports": [
+      1,
+      {
+        "order": "asc",
+        "type": "line-length",
+        "newlines-between": "always",
+        "groups": [
+          [
+            "builtin",
+            "external"
+          ],
+          "custom-mui",
+          "custom-routes",
+          "custom-hooks",
+          "custom-utils",
+          "internal",
+          "custom-components",
+          "custom-sections",
+          "custom-types",
+          [
+            "parent",
+            "sibling",
+            "index"
+          ],
+          "object",
+          "unknown"
+        ],
+        "custom-groups": {
+          "value": {
+            "custom-mui": "@mui/**",
+            "custom-routes": "src/routes/**",
+            "custom-utils": "src/utils/**",
+            "custom-components": "src/components/**",
+            "custom-types": "src/types/**"
+          }
+        },
+        "internal-pattern": [
+          "src/**"
+        ]
+      }
+    ]
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  }
 }
