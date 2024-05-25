@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, ReactNode, useContext, useState } from 'react'
+import React, { createContext, ReactNode, useCallback, useContext, useState } from 'react'
 import useSWR from 'swr'
 import { fetcher } from '@/utils/fetcher'
 
@@ -12,17 +12,19 @@ interface FipeContextType {
   selectedModel: string | null
   setSelectedBrand: (brand: string) => void
   setSelectedModel: (model: string) => void
-  isLoadingBrands: boolean
   fetchPrice: (brand: string, model: string, year: string) => Promise<string | null>
+  isLoadingBrands: boolean
+  priceError: string | null
   price: string | null
 }
 
 const FipeContext = createContext<FipeContextType | undefined>(undefined)
 
 export default function FipeProvider({ children }: { children: ReactNode }) {
-  const [selectedBrand, setSelectedBrand] = useState<string | null>(null)
-  const [selectedModel, setSelectedModel] = useState<string | null>(null)
+  const [selectedBrand, setSelectedBrandState] = useState<string | null>(null)
+  const [selectedModel, setSelectedModelState] = useState<string | null>(null)
   const [price, setPrice] = useState<string | null>(null)
+  const [priceError, setPriceError] = useState<string | null>(null)
   const {
     data: brands,
     error: brandsError,
@@ -42,7 +44,20 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
     selectedModel ? `/api/years?brand=${selectedBrand}&model=${selectedModel}` : null,
     fetcher,
   )
-  const fetchPrice = async (brand: string, model: string, year: string) => {
+  const setSelectedBrand = useCallback((brand: string) => {
+    setSelectedBrandState(brand)
+    setSelectedModelState(null)
+    setPrice(null)
+    setPriceError(null)
+  }, [])
+
+  const setSelectedModel = useCallback((model: string) => {
+    setSelectedModelState(model)
+    setPrice(null)
+    setPriceError(null)
+  }, [])
+  const fetchPrice = useCallback(async (brand: string, model: string, year: string) => {
+    setPriceError(null)
     try {
       const response = await fetch(`/api/price?brand=${brand}&model=${model}&year=${year}`)
       const result = await response.json()
@@ -50,14 +65,14 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
         setPrice(result.Valor)
         return result.Valor
       } else {
-        console.log(result.error)
+        setPriceError(result.error)
         return null
       }
     } catch (error) {
-      console.log('Failed to fetch price', error)
+      setPriceError('Failed to fetch price')
       return null
     }
-  }
+  }, [])
 
   if (brandsError || modelsError || yearsError) {
     console.error('Failed to fetch data:', brandsError || modelsError || yearsError)
@@ -68,7 +83,7 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
       value={{
         fetchPrice,
         price,
-
+        priceError,
         isLoadingBrands,
         brands,
         models,
