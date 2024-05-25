@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -30,6 +30,7 @@ const schema = yup.object().shape({
 })
 
 const FipeForm = () => {
+  const [showPrice, setShowPrice] = useState(false)
   const {
     brands,
     fetchPrice,
@@ -61,6 +62,7 @@ const FipeForm = () => {
       setSelectedBrand(watchBrand)
       setSelectedModel(null)
       setValue('model', '')
+      setShowPrice(false)
       setValue('year', '')
     }
   }, [watchBrand, setSelectedBrand, setSelectedModel, setValue, selectedBrand])
@@ -69,11 +71,13 @@ const FipeForm = () => {
     if (watchModel !== selectedModel) {
       setSelectedModel(watchModel)
       setValue('year', '')
+      setShowPrice(false)
     }
   }, [watchModel, setSelectedModel, setValue, selectedModel])
 
   const onSubmit = async (data: FormData) => {
     const price = await fetchPrice(data.brand, data.model, data.year)
+    setShowPrice(true)
     console.log('🚀 ~ onSubmit ~ price:', price)
   }
   console.log(errors?.brand)
@@ -145,7 +149,7 @@ const FipeForm = () => {
         <Button type='submit' variant='contained' color='primary' fullWidth>
           Consultar preço
         </Button>
-        {price && (
+        {showPrice && price && (
           <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', textAlign: 'center' }}>
             <Typography variant='h5' component='h2' gutterBottom>
               Tabela Fipe: Preço {selectedBrand} {selectedModel} {watch('year')}
