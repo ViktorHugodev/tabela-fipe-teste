@@ -14,7 +14,7 @@ export async function GET(req: Request) {
       `https://parallelum.com.br/fipe/api/v1/carros/marcas/${brand}/modelos`,
       {
         next: {
-          revalidate: 3600000, //1h
+          revalidate: 3600, //1h
         },
       },
     )

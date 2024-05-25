@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const response = await fetch('https://parallelum.com.br/fipe/api/v1/carros/marcas', {
       next: {
-        revalidate: 3600000, //1h
+        revalidate: 3600, //1h
       },
     })
 

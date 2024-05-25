@@ -13,6 +13,7 @@ import {
   Select,
   FormControl,
   InputLabel,
+  Paper,
 } from '@mui/material'
 import { useFipe } from '@/context/FipeContext'
 
@@ -31,6 +32,8 @@ const schema = yup.object().shape({
 const FipeForm = () => {
   const {
     brands,
+    fetchPrice,
+    price,
     models,
     years,
     selectedBrand,
@@ -69,10 +72,11 @@ const FipeForm = () => {
     }
   }, [watchModel, setSelectedModel, setValue, selectedModel])
 
-  const onSubmit = (data: FormData) => {
-    console.log(data)
+  const onSubmit = async (data: FormData) => {
+    const price = await fetchPrice(data.brand, data.model, data.year)
+    console.log('🚀 ~ onSubmit ~ price:', price)
   }
-
+  console.log(errors?.brand)
   return (
     <Container maxWidth='sm'>
       <Typography variant='h4' component='h1' gutterBottom>
@@ -141,6 +145,29 @@ const FipeForm = () => {
         <Button type='submit' variant='contained' color='primary' fullWidth>
           Consultar preço
         </Button>
+        {price && (
+          <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', textAlign: 'center' }}>
+            <Typography variant='h5' component='h2' gutterBottom>
+              Tabela Fipe: Preço {selectedBrand} {selectedModel} {watch('year')}
+            </Typography>
+            <Typography
+              variant='h4'
+              component='p'
+              style={{
+                color: 'white',
+                backgroundColor: '#00a699',
+                borderRadius: '20px',
+                display: 'inline-block',
+                padding: '10px 20px',
+              }}
+            >
+              {price}
+            </Typography>
+            <Typography variant='body2' component='p' gutterBottom>
+              Este é o preço de compra do veículo
+            </Typography>
+          </Paper>
+        )}
       </form>
     </Container>
   )

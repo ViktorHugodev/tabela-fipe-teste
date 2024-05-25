@@ -13,6 +13,8 @@ interface FipeContextType {
   setSelectedBrand: (brand: string) => void
   setSelectedModel: (model: string) => void
   isLoadingBrands: boolean
+  fetchPrice: (brand: string, model: string, year: string) => Promise<string | null>
+  price: string | null
 }
 
 const FipeContext = createContext<FipeContextType | undefined>(undefined)
@@ -20,7 +22,7 @@ const FipeContext = createContext<FipeContextType | undefined>(undefined)
 export default function FipeProvider({ children }: { children: ReactNode }) {
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null)
   const [selectedModel, setSelectedModel] = useState<string | null>(null)
-
+  const [price, setPrice] = useState<string | null>(null)
   const {
     data: brands,
     error: brandsError,
@@ -29,7 +31,6 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
     revalidateOnFocus: false,
     fallbackData: [],
     dedupingInterval: 3600000, // 1h
-    
   })
 
   const { data: models, error: modelsError } = useSWR(
@@ -41,6 +42,22 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
     selectedModel ? `/api/years?brand=${selectedBrand}&model=${selectedModel}` : null,
     fetcher,
   )
+  const fetchPrice = async (brand: string, model: string, year: string) => {
+    try {
+      const response = await fetch(`/api/price?brand=${brand}&model=${model}&year=${year}`)
+      const result = await response.json()
+      if (response.ok) {
+        setPrice(result.Valor)
+        return result.Valor
+      } else {
+        console.log(result.error)
+        return null
+      }
+    } catch (error) {
+      console.log('Failed to fetch price', error)
+      return null
+    }
+  }
 
   if (brandsError || modelsError || yearsError) {
     console.error('Failed to fetch data:', brandsError || modelsError || yearsError)
@@ -49,6 +66,9 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
   return (
     <FipeContext.Provider
       value={{
+        fetchPrice,
+        price,
+
         isLoadingBrands,
         brands,
         models,
