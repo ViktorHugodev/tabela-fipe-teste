@@ -1,6 +1,6 @@
 // app/page.tsx
 import FipeForm from '../components/FipeForm'
 
-export default function Home() {
+export default async function Home() {
   return <FipeForm />
 }

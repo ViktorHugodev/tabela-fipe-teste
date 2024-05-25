@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import { ThemeProvider } from '@mui/material/styles'
 import FipeProvider from '@/context/FipeContext'
+import { CssBaseline } from '@mui/material'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -20,6 +21,7 @@ export default function RootLayout({
       <body>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
+            <CssBaseline />
             <FipeProvider>{children}</FipeProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
