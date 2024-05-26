@@ -23,8 +23,8 @@ interface FipeContextType {
   years: Year[] | undefined
   selectedBrand: Brand | null
   selectedModel: Model | null
-  setSelectedBrand: (brand: Brand) => void
-  setSelectedModel: (model: Model) => void
+  setSelectedBrand: (brand: Brand | null) => void
+  setSelectedModel: (model: Model | null) => void
   fetchPrice: (brand: string, model: string, year: string) => Promise<string | null>
   isLoadingBrands: boolean
   isLoadingModels: boolean
@@ -70,14 +70,14 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
       : null,
     fetcher,
   )
-  const setSelectedBrand = useCallback((brand: Brand) => {
+  const setSelectedBrand = useCallback((brand: Brand | null) => {
     setSelectedBrandState(brand)
     setSelectedModelState(null)
     setPrice(null)
     setPriceError(null)
   }, [])
 
-  const setSelectedModel = useCallback((model: Model) => {
+  const setSelectedModel = useCallback((model: Model | null) => {
     setSelectedModelState(model)
     setPrice(null)
     setPriceError(null)

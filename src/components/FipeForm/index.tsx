@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import {
@@ -19,6 +19,7 @@ import {
   Alert,
 } from '@mui/material'
 import { useFipe } from '@/context/FipeContext'
+import SelectField from '../SelectFields'
 interface FormData {
   brand: string
   model: string
@@ -50,29 +51,25 @@ const FipeForm = () => {
     price,
   } = useFipe()
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    getValues,
-    watch,
-    formState: { errors },
-  } = useForm<FormData>({
+  const methods = useForm<FormData>({
     resolver: yupResolver(schema),
   })
-  console.log(getValues('year'))
+
+  const { handleSubmit, setValue, watch } = methods
+
   const watchBrand = watch('brand')
   const watchModel = watch('model')
   const selectedYear = watch('year')
+
   useEffect(() => {
     if (watchBrand !== selectedBrand?.codigo) {
       const brand = brands?.find(b => b.codigo === watchBrand)
       if (brand) {
         setSelectedBrand(brand)
       }
-      setSelectedModel(null) // Reseta o modelo quando a marca muda
-      setValue('model', '') // Reseta o valor do modelo no formulário
-      setValue('year', '') // Reseta o valor do ano no formulário
+      setSelectedModel(null)
+      setValue('model', '')
+      setValue('year', '')
     }
   }, [watchBrand, setSelectedBrand, setSelectedModel, setValue, selectedBrand?.codigo, brands])
 
@@ -82,7 +79,7 @@ const FipeForm = () => {
       if (model) {
         setSelectedModel(model)
       }
-      setValue('year', '') // Reseta o valor do ano no formulário
+      setValue('year', '')
     }
   }, [watchModel, setSelectedModel, setValue, selectedModel?.codigo, models])
 
@@ -91,126 +88,99 @@ const FipeForm = () => {
   }
 
   return (
-    <Container maxWidth='sm'>
-      <Typography variant='h4' component='h1' gutterBottom>
-        Tabela Fipe
-      </Typography>
-      <Typography variant='body1' component='p' gutterBottom>
-        Consulte o valor de um veículo de forma gratuita
-      </Typography>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl fullWidth margin='normal' error={!!errors.brand}>
-          <InputLabel id='brand-label'>Marca</InputLabel>
-          <Select
-            labelId='brand-label'
-            {...register('brand')}
-            defaultValue='' // Valor padrão para evitar undefined
-            disabled={isLoadingBrands}
+    <Container maxWidth='xl'>
+      <Box display='flex' justifyContent='center' alignItems='center'>
+        <Container maxWidth='sm'>
+          <Typography variant='h2' component='h1' gutterBottom textAlign='center'>
+            Tabela Fipe
+          </Typography>
+          <Typography variant='subtitle1' component='p' gutterBottom textAlign='center'>
+            Consulte o valor de um veículo de forma gratuita
+          </Typography>
+
+          <Box
+            sx={{
+              backgroundColor: '#fff',
+              padding: 4,
+              borderRadius: 2,
+            }}
           >
-            <MenuItem value=''>
-              <em>Selecione a Marca</em>
-            </MenuItem>
-            {isLoadingBrands ? (
-              <MenuItem disabled value=''>
-                <em>Carregando...</em>
-              </MenuItem>
-            ) : (
-              brands?.map(brand => (
-                <MenuItem key={brand.codigo} value={brand.codigo}>
-                  {brand.nome}
-                </MenuItem>
-              ))
-            )}
-          </Select>
-          {isLoadingBrands && <CircularProgress size={24} />}
-        </FormControl>
-        <FormControl fullWidth margin='normal' error={!!errors.model}>
-          <InputLabel id='model-label'>Modelo</InputLabel>
-          <Select
-            labelId='model-label'
-            {...register('model')}
-            defaultValue='' // Valor padrão para evitar undefined
-            disabled={!selectedBrand || isLoadingModels}
-          >
-            <MenuItem value=''>
-              <em>{!selectedBrand ? 'Selecione a Marca primeiro' : 'Selecione o Modelo'}</em>
-            </MenuItem>
-            {isLoadingModels ? (
-              <MenuItem disabled value=''>
-                <em>Carregando...</em>
-              </MenuItem>
-            ) : (
-              models?.map(model => (
-                <MenuItem key={model.codigo} value={model.codigo}>
-                  {model.nome}
-                </MenuItem>
-              ))
-            )}
-          </Select>
-          {isLoadingModels && <CircularProgress size={24} />}
-        </FormControl>
-        {selectedBrand && selectedModel && (
-          <FormControl fullWidth margin='normal' error={!!errors.year}>
-            <InputLabel id='year-label'>Ano</InputLabel>
-            <Select
-              labelId='year-label'
-              {...register('year')}
-              defaultValue='' // Valor padrão para evitar undefined
-              disabled={!selectedModel || isLoadingYears}
+            <FormProvider {...methods}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <SelectField
+                  name='brand'
+                  label='Marca'
+                  options={brands || []}
+                  isLoading={isLoadingBrands}
+                  error={!!priceError}
+                  disabled={false}
+                />
+
+                <SelectField
+                  name='model'
+                  label='Modelo'
+                  options={models || []}
+                  isLoading={isLoadingModels}
+                  error={!!priceError}
+                  disabled={!selectedBrand}
+                />
+                {selectedBrand && selectedModel && (
+                  <SelectField
+                    name='year'
+                    label='Ano'
+                    options={years || []}
+                    isLoading={isLoadingYears}
+                    error={!!priceError}
+                    disabled={!selectedModel}
+                  />
+                )}
+
+                <Box display='flex' justifyContent='center' mt={2}>
+                  <Button
+                    type='submit'
+                    variant='contained'
+                    color='primary'
+                    disabled={!selectedYear}
+                  >
+                    Consultar preço
+                  </Button>
+                </Box>
+              </form>
+            </FormProvider>
+          </Box>
+        </Container>
+      </Box>
+      <Container maxWidth='xl'>
+        <Box minHeight='30vh'>
+          {' '}
+          {price && (
+            <Paper
+              elevation={3}
+              style={{ padding: '20px', marginTop: '20px', textAlign: 'center' }}
             >
-              <MenuItem value=''>
-                <em>Selecione o Ano</em>
-              </MenuItem>
-              {isLoadingYears ? (
-                <MenuItem disabled value=''>
-                  <em>Carregando...</em>
-                </MenuItem>
-              ) : (
-                years?.map(year => (
-                  <MenuItem key={year.codigo} value={year.codigo}>
-                    {year.nome}
-                  </MenuItem>
-                ))
-              )}
-            </Select>
-            {isLoadingYears && <CircularProgress size={24} />}
-          </FormControl>
-        )}
-        <Button
-          type='submit'
-          variant='contained'
-          color='primary'
-          fullWidth
-          disabled={!selectedYear}
-        >
-          Consultar preço
-        </Button>
-        {isLoadingPrice && <CircularProgress size={24} />}
-        {priceError && <Alert severity='error'>{priceError}</Alert>}
-        {price && (
-          <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', textAlign: 'center' }}>
-            <Typography variant='h5' component='h2' gutterBottom>
-              Tabela Fipe: Preço {selectedBrand?.nome} {selectedModel?.nome} {watch('year')}
-            </Typography>
-            <Typography
-              variant='h4'
-              component='p'
-              style={{
-                color: 'white',
-                backgroundColor: '#00a699',
-                borderRadius: '20px',
-                display: 'inline-block',
-                padding: '10px 20px',
-              }}
-            >
-              {price}
-            </Typography>
-            <Typography variant='body2' component='p' gutterBottom>
-              Este é o preço de compra do veículo
-            </Typography>
-          </Paper>
-        )}
-      </form>
+              <Typography variant='h5' component='h2' gutterBottom>
+                Tabela Fipe: Preço {selectedBrand?.nome} {selectedModel?.nome} {watch('year')}
+              </Typography>
+              <Typography
+                variant='h4'
+                component='p'
+                style={{
+                  color: 'white',
+                  backgroundColor: '#00a699',
+                  borderRadius: '20px',
+                  display: 'inline-block',
+                  padding: '10px 20px',
+                }}
+              >
+                {price}
+              </Typography>
+              <Typography variant='body2' component='p' gutterBottom>
+                Este é o preço de compra do veículo
+              </Typography>
+            </Paper>
+          )}
+        </Box>
+      </Container>
     </Container>
   )
 }
