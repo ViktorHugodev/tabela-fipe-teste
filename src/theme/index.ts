@@ -19,6 +19,10 @@ const theme = createTheme({
       fontSize: '1.5rem',
       fontWeight: 700,
     },
+    body2: {
+      fontSize: '1rem',
+      fontWeight: 400,
+    },
   },
   palette: {
     primary: {

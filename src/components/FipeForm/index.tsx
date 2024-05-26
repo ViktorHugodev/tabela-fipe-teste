@@ -151,34 +151,38 @@ const FipeForm = () => {
           </Box>
         </Container>
       </Box>
-      <Box minHeight='30vh'>
-        {price && (
-          <Paper
-            elevation={3}
-            style={{ padding: '20px', marginTop: '20px', textAlign: 'center', minHeight: '30vh' }}
+      {price && (
+        <Box
+          minHeight='30vh'
+          display='flex'
+          flexDirection='column'
+          justifyContent='center'
+          alignItems='center'
+          sx={{
+            gap: 2,
+            backgroundColor: '#DCF5F2',
+          }}
+        >
+          <Typography variant='subtitle1' component='p' gutterBottom>
+            Tabela Fipe: Preço {selectedBrand?.nome} {selectedModel?.nome} {watch('year')}
+          </Typography>
+          <Typography
+            variant='h4'
+            component='p'
+            style={{
+              color: 'white',
+              backgroundColor: '#00a699',
+              borderRadius: '20px',
+              padding: '10px 20px',
+            }}
           >
-            <Typography variant='h5' component='h2' gutterBottom>
-              Tabela Fipe: Preço {selectedBrand?.nome} {selectedModel?.nome} {watch('year')}
-            </Typography>
-            <Typography
-              variant='h4'
-              component='p'
-              style={{
-                color: 'white',
-                backgroundColor: '#00a699',
-                borderRadius: '20px',
-                display: 'inline-block',
-                padding: '10px 20px',
-              }}
-            >
-              {price}
-            </Typography>
-            <Typography variant='body2' component='p' gutterBottom>
-              Este é o preço de compra do veículo
-            </Typography>
-          </Paper>
-        )}
-      </Box>
+            {price}
+          </Typography>
+          <Typography variant='body2' component='p' gutterBottom>
+            Este é o preço de compra do veículo
+          </Typography>
+        </Box>
+      )}
     </Box>
   )
 }
