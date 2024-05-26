@@ -3,7 +3,7 @@
 import React from 'react'
 import { Autocomplete, TextField } from '@mui/material'
 import { Controller, useFormContext } from 'react-hook-form'
-import { SelectFieldProps } from '@/types/selectTypes'
+import { SelectFieldProps } from './types'
 
 export default function SelectField({
   name,

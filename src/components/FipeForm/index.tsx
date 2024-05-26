@@ -9,7 +9,8 @@ import { useFipe } from '@/context/FipeContext'
 
 import SelectField from '../SelectFields'
 import { schema } from './schema'
-import { FormData } from '@/types/formTypes'
+import { FormData } from './types'
+import FipePrice from '../FipePrice'
 
 export default function FipeForm() {
   const {
@@ -129,36 +130,12 @@ export default function FipeForm() {
         </Container>
       </Box>
       {price && (
-        <Box
-          minHeight='30vh'
-          display='flex'
-          flexDirection='column'
-          justifyContent='center'
-          alignItems='center'
-          sx={{
-            gap: 2,
-            backgroundColor: '#DCF5F2',
-          }}
-        >
-          <Typography variant='subtitle1' component='p' gutterBottom>
-            Tabela Fipe: Preço {selectedBrand?.nome} {selectedModel?.nome} {watch('year')}
-          </Typography>
-          <Typography
-            variant='h4'
-            component='p'
-            style={{
-              color: 'white',
-              backgroundColor: '#00a699',
-              borderRadius: '20px',
-              padding: '10px 20px',
-            }}
-          >
-            {price}
-          </Typography>
-          <Typography variant='body2' component='p' gutterBottom>
-            Este é o preço de compra do veículo
-          </Typography>
-        </Box>
+        <FipePrice
+          brandName={selectedBrand?.nome || ''}
+          modelName={selectedModel?.nome || ''}
+          year={watch('year')}
+          price={price}
+        />
       )}
     </Box>
   )
