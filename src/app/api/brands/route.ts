@@ -10,7 +10,6 @@ export async function GET() {
     })
 
     const data = await response.json()
-    console.log('🚀 ~ GET ~ data:', data)
     return NextResponse.json(data)
   } catch (error) {
     return NextResponse.json({ error: 'Falha na requisição de brands' }, { status: 500 })
