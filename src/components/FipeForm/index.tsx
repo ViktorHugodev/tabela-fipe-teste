@@ -88,8 +88,8 @@ const FipeForm = () => {
   }
 
   return (
-    <Container maxWidth='xl'>
-      <Box display='flex' justifyContent='center' alignItems='center'>
+    <Box display='flex-col' alignItems='center' justifyContent='center' minHeight='100vh'>
+      <Box display='flex' justifyContent='center' alignItems='center' minHeight='70vh'>
         <Container maxWidth='sm'>
           <Typography variant='h2' component='h1' gutterBottom textAlign='center'>
             Tabela Fipe
@@ -137,6 +137,7 @@ const FipeForm = () => {
 
                 <Box display='flex' justifyContent='center' mt={2}>
                   <Button
+                    sx={{ textTransform: 'none' }}
                     type='submit'
                     variant='contained'
                     color='primary'
@@ -150,38 +151,35 @@ const FipeForm = () => {
           </Box>
         </Container>
       </Box>
-      <Container maxWidth='xl'>
-        <Box minHeight='30vh'>
-          {' '}
-          {price && (
-            <Paper
-              elevation={3}
-              style={{ padding: '20px', marginTop: '20px', textAlign: 'center' }}
+      <Box minHeight='30vh'>
+        {price && (
+          <Paper
+            elevation={3}
+            style={{ padding: '20px', marginTop: '20px', textAlign: 'center', minHeight: '30vh' }}
+          >
+            <Typography variant='h5' component='h2' gutterBottom>
+              Tabela Fipe: Preço {selectedBrand?.nome} {selectedModel?.nome} {watch('year')}
+            </Typography>
+            <Typography
+              variant='h4'
+              component='p'
+              style={{
+                color: 'white',
+                backgroundColor: '#00a699',
+                borderRadius: '20px',
+                display: 'inline-block',
+                padding: '10px 20px',
+              }}
             >
-              <Typography variant='h5' component='h2' gutterBottom>
-                Tabela Fipe: Preço {selectedBrand?.nome} {selectedModel?.nome} {watch('year')}
-              </Typography>
-              <Typography
-                variant='h4'
-                component='p'
-                style={{
-                  color: 'white',
-                  backgroundColor: '#00a699',
-                  borderRadius: '20px',
-                  display: 'inline-block',
-                  padding: '10px 20px',
-                }}
-              >
-                {price}
-              </Typography>
-              <Typography variant='body2' component='p' gutterBottom>
-                Este é o preço de compra do veículo
-              </Typography>
-            </Paper>
-          )}
-        </Box>
-      </Container>
-    </Container>
+              {price}
+            </Typography>
+            <Typography variant='body2' component='p' gutterBottom>
+              Este é o preço de compra do veículo
+            </Typography>
+          </Paper>
+        )}
+      </Box>
+    </Box>
   )
 }
 
