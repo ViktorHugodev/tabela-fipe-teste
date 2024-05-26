@@ -3,36 +3,15 @@
 import React, { useEffect } from 'react'
 
 import { FormProvider, useForm } from 'react-hook-form'
+import { Button, Container, Typography, Box } from '@mui/material'
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import {
-  Button,
-  Container,
-  Typography,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  Paper,
-  Box,
-  CircularProgress,
-  Alert,
-} from '@mui/material'
 import { useFipe } from '@/context/FipeContext'
+
 import SelectField from '../SelectFields'
-interface FormData {
-  brand: string
-  model: string
-  year: string
-}
+import { schema } from './schema'
+import { FormData } from '@/types/formTypes'
 
-const schema = yup.object().shape({
-  brand: yup.string().required('Marca é obrigatória'),
-  model: yup.string().required('Modelo é obrigatório'),
-  year: yup.string().required('Ano é obrigatório'),
-})
-
-const FipeForm = () => {
+export default function FipeForm() {
   const {
     brands,
     models,
@@ -45,9 +24,7 @@ const FipeForm = () => {
     isLoadingBrands,
     isLoadingModels,
     isLoadingYears,
-    isLoadingPrice,
     priceError,
-
     price,
   } = useFipe()
 
@@ -186,5 +163,3 @@ const FipeForm = () => {
     </Box>
   )
 }
-
-export default FipeForm

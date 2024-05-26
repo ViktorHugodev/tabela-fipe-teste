@@ -3,36 +3,7 @@
 import React, { createContext, ReactNode, useCallback, useContext, useState } from 'react'
 import useSWR from 'swr'
 import { fetcher } from '@/utils/fetcher'
-interface Brand {
-  codigo: string
-  nome: string
-}
-
-interface Model {
-  codigo: string
-  nome: string
-}
-
-interface Year {
-  codigo: string
-  nome: string
-}
-interface FipeContextType {
-  brands: Brand[] | undefined
-  models: Model[] | undefined
-  years: Year[] | undefined
-  selectedBrand: Brand | null
-  selectedModel: Model | null
-  setSelectedBrand: (brand: Brand | null) => void
-  setSelectedModel: (model: Model | null) => void
-  fetchPrice: (brand: string, model: string, year: string) => Promise<string | null>
-  isLoadingBrands: boolean
-  isLoadingModels: boolean
-  isLoadingYears: boolean
-  isLoadingPrice: boolean
-  priceError: string | null
-  price: string | null
-}
+import { Brand, FipeContextType, Model, Year } from '@/types/fipeTypes'
 
 const FipeContext = createContext<FipeContextType | undefined>(undefined)
 
@@ -42,6 +13,7 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
   const [price, setPrice] = useState<string | null>(null)
   const [priceError, setPriceError] = useState<string | null>(null)
   const [isLoadingPrice, setIsLoadingPrice] = useState(false)
+
   const {
     data: brands,
     error: brandsError,
@@ -57,8 +29,6 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
     error: modelsError,
     isLoading: isLoadingModels,
   } = useSWR(selectedBrand ? `/api/models?brand=${selectedBrand.codigo}` : null, fetcher)
-
-  console.log('🚀 ~ FipeProvider ~ daModeelçsta:', models)
 
   const {
     data: years,
