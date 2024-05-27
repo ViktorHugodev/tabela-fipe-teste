@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Tabela Fipe Teste
 
-## Getting Started
+Este projeto é uma aplicação Next.js para consulta de preços de veículos utilizando a tabela Fipe. A aplicação permite selecionar a marca, modelo e ano do veículo e retorna o preço conforme a tabela Fipe.
 
-First, run the development server:
+## Tecnologias Utilizadas
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Next.js 14.2](https://nextjs.org/)
+- [React 18](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Material-UI](https://mui.com/)
+- [SWR](https://swr.vercel.app/)
+- [React Hook Form](https://react-hook-form.com/)
+- [Yup](https://github.com/jquense/yup)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Como Rodar o Projeto
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Pré-requisitos
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Node.js (versão recomendada 16.x ou superior)
+- Yarn (recomendado) ou npm
 
-## Learn More
+### Passos para Rodar
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   Clone o repositório:
+   git clone https://github.com/seu-usuario/tabela-fipe-teste.git
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   Navegue até o diretório do projeto: 
+   cd tabela-fipe-teste
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   Instale as dependências: 
+   yarn install
 
-## Deploy on Vercel
+   Inicie o servidor de desenvolvimento: 
+   yarn dev
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   Abra seu navegador e acesse: 
+   http://localhost:3000
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Estrutura do Projeto
+
+- `public/`: Arquivos públicos, como favicon.
+- `src/`: Código fonte da aplicação.
+  - `app/`: Componentes e páginas do Next.js.
+    - `api/`: Endpoints da API.
+  - `components/`: Componentes reutilizáveis da aplicação.
+  - `context/`: Context API para gerenciar estados globais.
+  - `theme/`: Configurações de tema do Material-UI.
+  - `types/`: Definições de tipos TypeScript.
+  - `utils/`: Utilitários diversos.
+- `.eslintrc.json`: Configurações do ESLint.
+- `next.config.mjs`: Configurações do Next.js.
+- `tsconfig.json`: Configurações do TypeScript.
+- `package.json`: Dependências e scripts do projeto.
+
+## Endpoints da API
+
+- `GET /api/brands`: Retorna a lista de marcas.
+- `GET /api/models?brand={brand}`: Retorna a lista de modelos para uma marca específica.
+- `GET /api/years?brand={brand}&model={model}`: Retorna a lista de anos para um modelo específico.
+
+
+

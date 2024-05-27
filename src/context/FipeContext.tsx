@@ -53,6 +53,7 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
     setPrice(null)
     setPriceError(null)
   }, [])
+
   const fetchPrice = useCallback(async (brand: string, model: string, year: string) => {
     setIsLoadingPrice(true)
     setPriceError(null)
