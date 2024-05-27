@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, Suspense } from 'react'
 
 import { FormProvider, useForm } from 'react-hook-form'
-import { Button, Container, Typography, Box } from '@mui/material'
+import { Button, Container, Typography, Box, CircularProgress } from '@mui/material'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useFipe } from '@/context/FipeContext'
 
@@ -83,49 +83,51 @@ export default function FipeForm() {
               borderRadius: 2,
             }}
           >
-            <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <SelectField
-                  name='brand'
-                  label='Marca'
-                  options={brands || []}
-                  isLoading={isLoadingBrands}
-                  error={!!priceError}
-                  disabled={false}
-                />
-
-                <SelectField
-                  name='model'
-                  label='Modelo'
-                  options={models || []}
-                  isLoading={isLoadingModels}
-                  error={!!priceError}
-                  disabled={!selectedBrand}
-                />
-                {selectedBrand && selectedModel && (
+            <Suspense fallback={<CircularProgress />}>
+              <FormProvider {...methods}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                   <SelectField
-                    name='year'
-                    label='Ano'
-                    options={years || []}
-                    isLoading={isLoadingYears}
+                    name='brand'
+                    label='Marca'
+                    options={brands || []}
+                    isLoading={isLoadingBrands}
                     error={!!priceError}
-                    disabled={!selectedModel}
+                    disabled={false}
                   />
-                )}
 
-                <Box display='flex' justifyContent='center' mt={2}>
-                  <Button
-                    sx={{ textTransform: 'none' }}
-                    type='submit'
-                    variant='contained'
-                    color='primary'
-                    disabled={!selectedYear}
-                  >
-                    Consultar preço
-                  </Button>
-                </Box>
-              </form>
-            </FormProvider>
+                  <SelectField
+                    name='model'
+                    label='Modelo'
+                    options={models || []}
+                    isLoading={isLoadingModels}
+                    error={!!priceError}
+                    disabled={!selectedBrand}
+                  />
+                  {selectedBrand && selectedModel && (
+                    <SelectField
+                      name='year'
+                      label='Ano'
+                      options={years || []}
+                      isLoading={isLoadingYears}
+                      error={!!priceError}
+                      disabled={!selectedModel}
+                    />
+                  )}
+
+                  <Box display='flex' justifyContent='center'>
+                    <Button
+                      sx={{ textTransform: 'none' }}
+                      type='submit'
+                      variant='contained'
+                      color='primary'
+                      disabled={!selectedYear}
+                    >
+                      Consultar preço
+                    </Button>
+                  </Box>
+                </form>
+              </FormProvider>
+            </Suspense>
           </Box>
         </Container>
       </Box>

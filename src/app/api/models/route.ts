@@ -6,7 +6,7 @@ export async function GET(req: Request) {
   const brand = searchParams.get('brand')
 
   if (!brand) {
-    return NextResponse.json({ error: 'Brand is required' }, { status: 400 })
+    return NextResponse.json({ error: 'Modelo é necessário' }, { status: 400 })
   }
 
   try {
@@ -21,6 +21,6 @@ export async function GET(req: Request) {
     const data = await response.json()
     return NextResponse.json(data.modelos)
   } catch (error) {
-    return NextResponse.json({ error: 'Falha na requisição de models' }, { status: 500 })
+    return NextResponse.json({ error: 'Falha na requisição de modelo' }, { status: 500 })
   }
 }

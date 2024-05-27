@@ -22,6 +22,7 @@ export default function FipeProvider({ children }: { children: ReactNode }) {
     revalidateOnFocus: false,
     fallbackData: [],
     dedupingInterval: 3600000, // 1h
+    suspense: true,
   })
 
   const {
